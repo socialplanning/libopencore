@@ -49,28 +49,29 @@ class RemoteProxy(object):
             robots_uri = robots_uri.rstrip('/') + '/'
         self.robots_uri = robots_uri
 
-    robots = ["http://www.exabot.com/go/robot",
-              "http://search.msn.com/msnbot.htm",
-              "http://www.google.com/bot.html",
-              "http://about.ask.com/en/docs/about/webmasters.shtml",
-              "http://yandex.com/bots",
-              "http://help.yahoo.com/help/us/ysearch/slurp",
-              "http://www.baidu.com/search/spider.htm",
+    robots = ["+http://www.exabot.com/go/robot",
+              "+http://search.msn.com/msnbot.htm",
+              "+http://www.google.com/bot.html",
+              "+http://about.ask.com/en/docs/about/webmasters.shtml",
+              "+http://yandex.com/bots",
+              "+http://help.yahoo.com/help/us/ysearch/slurp",
+              "+http://www.baidu.com/search/spider.htm",
+              "+http://www.bing.com/bingbot.htm"
               ]
 
-    def test_robots(self, agent):
-        agent = agent.lower()
+    def test_robots(self, environ):
+        if not environ.has_key("HTTP_USER_AGENT"):
+            return False
+        agent = environ['HTTP_USER_AGENT'].lower()
         for robot in self.robots:
             if robot in agent:
                 return True
         return False
 
     def pick_remote_uri(self, environ):
-        if self.robots_uri is not None:
-            if environ.has_key("HTTP_USER_AGENT"):                
-                agent = environ['HTTP_USER_AGENT']
-                if self.test_robots(agent):
-                    return self.robots_uri
+        if self.robots_uri is not None:            
+            if self.test_robots(environ):
+                return self.robots_uri
         i = randint(0, len(self.remote_uris)-1)
         return self.remote_uris[i]
 
