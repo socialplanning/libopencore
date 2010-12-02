@@ -66,6 +66,7 @@ class CustomDeliveranceMiddleware(DeliveranceMiddleware):
             value = orig_req.environ.get(header)
             if value is None: continue
             subreq.environ[header] = value
+        subreq.user_agent = "Deliverance"
         return subreq
 
     def get_resource(self, url, orig_req, log, retry_inner_if_not_200=False):
