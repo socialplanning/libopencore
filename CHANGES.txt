@@ -35,9 +35,14 @@ Bugs Fixed
   This fixes the behavior of TaskTracker's Ajax requests to post new
   comments on a task.
 
-* The deliverance.xml rules no longer try to fetch `/openplans/oc-footer`
-  or `/openplans/oc-header`; these have been unused for ages, so there's
+* The deliverance.xml rules no longer try to fetch ``/openplans/oc-footer``
+  or ``/openplans/oc-header``; these have been unused for ages, so there's
   no need to make the extra subrequests to Zope.
+
+* The composite WSGI application in wsgi.py now adds the request header
+  ``X-Openplans-Application: zope`` when directing a request to opencore.
+  This behavior previously existed somewhere in DeliveranceVHoster.
+
   
 0.4
 ===

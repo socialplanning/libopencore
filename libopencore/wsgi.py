@@ -116,8 +116,10 @@ class URLDispatcher(object):
 
         project, new_script_name, new_path_info = parse_project(environ)
         if not project:
-            # we are not in a project context, so we'll just let the
+            # We are not in a project context, so we'll just let the
             # default app (opencore) deal with the request.
+            if not environ.has_key('HTTP_X_OPENPLANS_APPLICATION'):
+                environ['HTTP_X_OPENPLANS_APPLICATION'] = 'zope'
             return self.default_app(environ, start_response)
 
         add_request_header('HTTP_X_OPENPLANS_PROJECT', project, environ)
@@ -130,6 +132,8 @@ class URLDispatcher(object):
                 environ, start_response)
 
         if not app_to_dispatch_to:
+            if not environ.has_key('HTTP_X_OPENPLANS_APPLICATION'):
+                environ['HTTP_X_OPENPLANS_APPLICATION'] = 'zope'
             return self.default_app(environ, start_response)
 
         # this is pretty hideous but i don't have time to find the source
