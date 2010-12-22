@@ -14,8 +14,8 @@ Features added
   To segregate robots from all other users, this URL could be
   omitted from the ``remote_uri`` parameter.
 
-* The deliverance.xml rules now try to fetch `/openplans/xinha-config`
-  if there is a `<div class="opencore_wysiwyg">` present in the page.
+* The deliverance.xml rules now try to fetch ``/openplans/xinha-config``
+  if there is a ``<div class="opencore_wysiwyg">`` present in the page.
   This is used to apply a consistent Xinha editor to Wordpress pages.
   For more details and context see: http://www.coactivate.org/projects/opencore/lists/opencore-dev/archive/2010/09/1283636838104/forum_view
 
@@ -52,7 +52,7 @@ Bugs Fixed
 Added a simple random-choice load balancer to the http proxy.
 
 To use it for a given backend, pass in a space-separated list 
-of URLs as ``remote_uri``instead of a single URL.  Assuming you
+of URLs as ``remote_uri`` instead of a single URL.  Assuming you
 have identical applications listening at each URL, proxied
 requests will be distributed across those URLs.
 
