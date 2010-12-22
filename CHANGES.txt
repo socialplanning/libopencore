@@ -17,6 +17,7 @@ Features added
 * The deliverance.xml rules now try to fetch `/openplans/xinha-config`
   if there is a `<div class="opencore_wysiwyg">` present in the page.
   This is used to apply a consistent Xinha editor to Wordpress pages.
+  For more details and context see: http://www.coactivate.org/projects/opencore/lists/opencore-dev/archive/2010/09/1283636838104/forum_view
 
 Bugs Fixed
 ----------
@@ -42,6 +43,7 @@ Bugs Fixed
 * The composite WSGI application in wsgi.py now adds the request header
   ``X-Openplans-Application: zope`` when directing a request to opencore.
   This behavior previously existed somewhere in DeliveranceVHoster.
+  It fixes http://trac.socialplanning.org/opencore/ticket/2943
 
   
 0.4
