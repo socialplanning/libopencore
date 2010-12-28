@@ -107,9 +107,11 @@ class RemoteProxy(object):
                 environ_copy['frontend_port'] = parts[1]
             else:
                 environ_copy['frontend_port'] = '80'
-            remote_uri = remote_uri + (vhm_template % environ_copy)
-            remote_uri = remote_uri + self.site_root
-
+            remote_uri = '%s%s%s%s' % (
+                remote_uri,
+                (vhm_template % environ_copy),
+                self.site_root,
+                'VirtualHostRoot')
         environ['HTTP_X_OPENPLANS_DOMAIN'] = environ['HTTP_HOST'].split(':')[0]
 
         app = proxyapp.ForcedProxy(
