@@ -1,3 +1,25 @@
+0.6 (unreleased)
+================
+
+* Added new configuration variable ``site_root`` in http_proxy app,
+  for proxying to an opencore (zope) backend.  The default value
+  is ``/openplans/``.  If you are proxying to an opencore backend
+  where the plone site root is installed elsewhere, or if you are
+  using a ++skin++ layer for customizations, you can set this to a
+  different value.
+
+  This should be used instead of setting ``remote_uri`` to a value
+  like ``http://localhost:10001/++skin++avata/``.  Instead of
+
+    remote_uri = http://localhost:10001/++skin++avata/
+
+  you should use
+
+    remote_uri = http://localhost:10001
+    site_root = /++skin++avata/openplans/
+
+  to ensure proper url generation.
+
 0.5
 ===
 

@@ -1,18 +1,24 @@
 from wsgifilter import proxyapp
 
-vhm_template = "VirtualHostBase/%(wsgi.url_scheme)s/%(HTTP_HOST)s:%(frontend_port)s/openplans/VirtualHostRoot/"
+vhm_template = "VirtualHostBase/%(wsgi.url_scheme)s/%(HTTP_HOST)s:%(frontend_port)s"
 
 def app_factory(global_conf,
                 remote_uri=None,
                 is_opencore=False,
                 is_twirlip=None,
                 robots_uri=None,
+                site_root=None,
                 **local_conf):
     assert remote_uri is not None
+    if site_root is not None:
+        assert is_opencore
+
     remote_uris = [i.strip() for i in remote_uri.split()
                    if i.strip()]
     
-    app = RemoteProxy(remote_uris, is_opencore, robots_uri=robots_uri)
+    app = RemoteProxy(remote_uris, is_opencore, 
+                      robots_uri=robots_uri,
+                      site_root=site_root)
     if is_twirlip is None:
         return app
     # if we're proxying to twirlip we need to wrap this in
@@ -34,7 +40,8 @@ class fixer(object):
 
 from random import randint
 class RemoteProxy(object):
-    def __init__(self, remote_uris=None, is_opencore=False, robots_uri=None):
+    def __init__(self, remote_uris=None, is_opencore=False, 
+                 robots_uri=None, site_root=None):
         remote_uris = remote_uris or []
 
         # make sure there's a trailing slash
@@ -44,6 +51,11 @@ class RemoteProxy(object):
             ]
         
         self.is_opencore = is_opencore
+
+        if site_root:
+            site_root = '/%s/' % site_root.strip('/')
+        self.site_root = site_root or "/openplans/"
+        
 
         if robots_uri is not None:
             robots_uri = robots_uri.rstrip('/') + '/'
@@ -96,6 +108,7 @@ class RemoteProxy(object):
             else:
                 environ_copy['frontend_port'] = '80'
             remote_uri = remote_uri + (vhm_template % environ_copy)
+            remote_uri = remote_uri + self.site_root
 
         environ['HTTP_X_OPENPLANS_DOMAIN'] = environ['HTTP_HOST'].split(':')[0]
 
