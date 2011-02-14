@@ -38,6 +38,7 @@ class CustomDeliveranceMiddleware(DeliveranceMiddleware):
                          "HTTP_X_OPENPLANS_APPLICATION",
                          "HTTP_X_OPENPLANS_PROJECT",
                          "HTTP_X_OPENPLANS_DOMAIN",
+                         "HTTP_X_FORWARDED_SERVER"
                          ]
 
     def default_theme(self, environ):
@@ -67,6 +68,8 @@ class CustomDeliveranceMiddleware(DeliveranceMiddleware):
             if value is None: continue
             subreq.environ[header] = value
         subreq.user_agent = "Deliverance"
+        if subreq.host and subreq.host.endswith(":80"):
+            subreq.host = subreq.host[:-3]
         return subreq
 
     def get_resource(self, url, orig_req, log, retry_inner_if_not_200=False):
