@@ -1,7 +1,7 @@
 <ruleset>
   <rule class="default">
     <replace theme="children://div[@id='oc-content-container']"
-             content="//div[@id='oc-tasktracker-wrapper']|//div[@id='oc-blog-wrapper']|//body[@id='oc-wp-admin-body']|//div[@class='oc-genericError']"
+             content="//div[@id='oc-tasktracker-wrapper']|//div[@id='oc-blog-wrapper']|//body[@id='oc-wp-admin-body']|//div[@class='oc-genericError']|//div[@class='page']|//div[@class='body']"
 	     collapse-sources="1"
 	     />
     <replace theme="div.opencore_wysiwyg" content="script,link" href="/xinha-config" notheme="ignore" />
