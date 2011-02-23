@@ -69,6 +69,11 @@ def composite_factory(loader, global_conf, **local_conf):
         wordpress = loader.get_app(wordpress)
         other_apps.append(('/blog', wordpress, 'wordpress'))
 
+    zine = local_conf.get('zine')
+    if zine is not None:
+        zine = loader.get_app(zine)
+        other_apps.append(('/zine', zine, 'zine'))
+
     return URLDispatcher(default_app,
                          *other_apps)
 
@@ -144,7 +149,7 @@ class URLDispatcher(object):
         # so a URL like /myproject/tasks/tasklist/show_create is treated as if 
         # it were /myproject/tasks/show_create and results in a 404.
         new_path_info = new_path_info.lstrip('/')
-        if app_name != "tasktracker" and new_path_info:
+        if app_name not in ("tasktracker", "zine") and new_path_info:
             new_path_info = "/%s" % new_path_info
 
         new_script_name = new_script_name.rstrip('/')
