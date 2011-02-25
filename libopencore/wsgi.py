@@ -141,6 +141,8 @@ class URLDispatcher(object):
                 environ['HTTP_X_OPENPLANS_APPLICATION'] = 'zope'
             return self.default_app(environ, start_response)
 
+        #print new_script_name, new_path_info
+
         # this is pretty hideous but i don't have time to find the source
         # of the bug.  if wordpress receives a PATH_INFO without a leading
         # slash it constructs URLs missing that slash like /myproject/blogwpadmin.php
@@ -148,11 +150,11 @@ class URLDispatcher(object):
         # it loses all the controller routing information from PATH_INFO internally
         # so a URL like /myproject/tasks/tasklist/show_create is treated as if 
         # it were /myproject/tasks/show_create and results in a 404.
-        new_path_info = new_path_info.lstrip('/')
-        if app_name not in ("tasktracker", "zine") and new_path_info:
-            new_path_info = "/%s" % new_path_info
+        #new_path_info = new_path_info.lstrip('/')
+        #if app_name not in ("tasktracker", "zine") and new_path_info:
+        #    new_path_info = "/%s" % new_path_info
 
-        new_script_name = new_script_name.rstrip('/')
+        #new_script_name = new_script_name.rstrip('/')
 
         environ['PATH_INFO'], environ['SCRIPT_NAME'] = (
             new_path_info, new_script_name)
