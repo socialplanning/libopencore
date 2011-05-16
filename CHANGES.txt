@@ -20,6 +20,11 @@
 
   to ensure proper url generation.
 
+* Added X-Forwarded-Server to the set of preserved headers in 
+  Deliverance subrequests.
+
+
+
 0.5
 ===
 
