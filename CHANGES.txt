@@ -1,5 +1,5 @@
-0.6 (unreleased)
-================
+0.6
+===
 
 * Added new configuration variable ``site_root`` in http_proxy app,
   for proxying to an opencore (zope) backend.  The default value
