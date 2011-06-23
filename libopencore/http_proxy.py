@@ -8,6 +8,7 @@ def app_factory(global_conf,
                 is_twirlip=None,
                 robots_uri=None,
                 site_root=None,
+                rewrite_links=False,
                 **local_conf):
     assert remote_uri is not None
     if site_root is not None:
@@ -18,7 +19,7 @@ def app_factory(global_conf,
     
     app = RemoteProxy(remote_uris, is_opencore, 
                       robots_uri=robots_uri,
-                      site_root=site_root)
+                      site_root=site_root, rewrite_links=rewrite_links)
     if is_twirlip is None:
         return app
     # if we're proxying to twirlip we need to wrap this in
@@ -41,7 +42,7 @@ class fixer(object):
 from random import randint
 class RemoteProxy(object):
     def __init__(self, remote_uris=None, is_opencore=False, 
-                 robots_uri=None, site_root=None):
+                 robots_uri=None, site_root=None, rewrite_links=False):
         remote_uris = remote_uris or []
 
         # make sure there's no trailing slash
@@ -60,6 +61,7 @@ class RemoteProxy(object):
         if robots_uri is not None:
             robots_uri = robots_uri.rstrip('/') + '/'
         self.robots_uri = robots_uri
+        self.rewrite_links = rewrite_links
 
     robots = ["+http://www.exabot.com/go/robot",
               "+http://search.msn.com/msnbot.htm",
@@ -126,15 +128,16 @@ class RemoteProxy(object):
         request = Request(environ_copy)
         resp = request.get_response(app)
 
-        resp = rewrite_links(
-            Request(environ), resp,
-            url_normalize(remote_uri),
-            url_normalize(Request(environ).application_url),
-            url_normalize('%s://%s%s' % (
-                    request.scheme, 
-                    request.host,
-                    request.path_qs))
-            )
+        if self.rewrite_links:
+            resp = rewrite_links(
+                Request(environ), resp,
+                url_normalize(remote_uri),
+                url_normalize(Request(environ).application_url),
+                url_normalize('%s://%s%s' % (
+                        request.scheme, 
+                        request.host,
+                        request.path_qs))
+                )
         
         return resp(environ, start_response)
 
