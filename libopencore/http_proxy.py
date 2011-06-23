@@ -172,7 +172,7 @@ def rewrite_links(request, response,
             return link
         new = orig_base + link[len(proxied_base):]
         return new
-    if response.content_type != 'text/html':
+    if response.content_type != 'text/html' or len(response.body) == 0:
         pass
     else:
         if not response.charset:
