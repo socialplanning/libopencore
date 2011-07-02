@@ -51,7 +51,7 @@ setup(name="libopencore",
       entry_points="""
       [paste.app_factory]
       proxy = libopencore.http_proxy:app_factory
-
+      mock_opencore = libopencore.mock_opencore:app_factory
       [paste.composite_factory]
       main = libopencore.wsgi:composite_factory
 
