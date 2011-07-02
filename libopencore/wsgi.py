@@ -74,6 +74,11 @@ def composite_factory(loader, global_conf, **local_conf):
         zine = loader.get_app(zine)
         other_apps.append(('/zine', zine, 'zine'))
 
+    svenweb = local_conf.get('svenweb')
+    if svenweb is not None:
+        svenweb = loader.get_app(svenweb)
+        other_apps.append(('/wikis', svenweb, 'svenweb'))
+
     return URLDispatcher(default_app,
                          *other_apps)
 
@@ -151,7 +156,7 @@ class URLDispatcher(object):
         # so a URL like /myproject/tasks/tasklist/show_create is treated as if 
         # it were /myproject/tasks/show_create and results in a 404.
         #new_path_info = new_path_info.lstrip('/')
-        #if app_name not in ("tasktracker", "zine") and new_path_info:
+        #if app_name not in ("tasktracker", "zine", "svenweb") and new_path_info:
         #    new_path_info = "/%s" % new_path_info
 
         #new_script_name = new_script_name.rstrip('/')
