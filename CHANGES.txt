@@ -1,3 +1,10 @@
+0.7
+===
+
+* New module ``libopencore.import_utils``
+
+* New function ``parse_listen_settings`` in ``libopencore.import_utils``
+
 0.6
 ===
 
