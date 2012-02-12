@@ -26,7 +26,7 @@ def parse_listen_settings(ini):
             continue
 
         if section == "managers":
-            settings[section].append(line)
+            settings[section].append(line.decode("utf8"))
             continue
         if section == "description":
             settings['description'] += line.strip() + " "
@@ -39,6 +39,10 @@ def parse_listen_settings(ini):
         if key == "created_on":
             format = "%Y-%m-%d %H:%M:%S"
             value = datetime.datetime(*(time.strptime(value, format)[0:6]))
+        elif key == "sync_membership":
+            value = (value == "True" and True or False)
+        elif key == "title":
+            value = value.decode("utf8")
         settings[section][key] = value
-    settings['description'] = settings['description'].strip()
+    settings['description'] = settings['description'].strip().decode("utf8")
     return settings
