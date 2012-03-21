@@ -30,7 +30,7 @@ setup(name="libopencore",
       zip_safe=False,
       install_requires=[
         "httplib2",
-        "ElementTree",
+        "elementtree",
         ],
       extras_require={
         "deliverance": [
