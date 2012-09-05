@@ -47,3 +47,30 @@ def get_users_for_project(project, server, admin_info):
             m['roles'].append(role.text)
         members.append(m)
     return members
+
+def get_info_for_user(username, server, admin_info):
+    resp, content = admin_post("%s/people/%s/info.xml" % (server, username), *admin_info)
+    
+    #404 means the user isn't fully initialized.
+    if resp['status'] == '404':
+        raise ProjectNotFoundError
+
+    if resp['status'] != '200':
+        if resp['status'] == '302':
+            # redirect probably means auth failed
+            extra = '; did your admin authentication fail?'
+        elif resp['status'] == '400':
+            # Probably Zope is gone
+            extra = '; is Zope started?'
+        else:
+            extra = ''
+            
+        raise ValueError("Error retrieving user %s: status %s%s" 
+                         % (project, resp['status'], extra))
+
+    tree = etree.fromstring(content)
+    info = {}
+    for el in tree:
+        info[el.tag] = el.text
+    return info
+
