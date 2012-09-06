@@ -74,3 +74,26 @@ def get_info_for_user(username, server, admin_info):
         info[el.tag] = el.text
     return info
 
+def get_info_for_project(project, server, admin_info):
+    resp, content = admin_post("%s/projects/%s/info.xml" % (server, project), *admin_info)
+    
+    if resp['status'] == '404':
+        raise ProjectNotFoundError
+
+    if resp['status'] != '200':
+        if resp['status'] == '302':
+            # redirect probably means auth failed
+            extra = '; did your admin authentication fail?'
+        elif resp['status'] == '400':
+            # Probably Zope is gone
+            extra = '; is Zope started?'
+        else:
+            extra = ''
+            
+        raise ValueError("Error retrieving project %s: status %s%s" 
+                         % (project, resp['status'], extra))
+
+    tree = etree.fromstring(content)
+    policy = tree[0].text
+    return policy
+
