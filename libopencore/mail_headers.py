@@ -24,7 +24,9 @@ def build_headers(project, application, environment, object, author,
 def validate_headers(headers, secret_filename):
     headers = dict((key.lower(), val) for key, val in headers.items()
                    if key.lower().startswith("x-opencore"))
-    hash = headers.pop("x-opencore-validation-key")
+    hash = headers.pop("x-opencore-validation-key", None)
+    if hash is None:
+        return None
 
     _headers = sorted(headers.items())
     _headers =  "&".join("=".join((key, val)) for key, val in _headers)
