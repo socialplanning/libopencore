@@ -84,6 +84,11 @@ def composite_factory(loader, global_conf, **local_conf):
         svenweb = loader.get_app(svenweb)
         other_apps.append(('/wikis', svenweb, 'svenweb'))
 
+    listen = local_conf.get('listen')
+    if listen is not None:
+        listen = loader.get_app(listen)
+        other_apps.append(('/lists', listen, 'listen'))
+
     return URLDispatcher(default_app,
                          *other_apps)
 

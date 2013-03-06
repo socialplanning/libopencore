@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.6'
+version = '0.7'
 
 readme = open('README.txt').read()
 changes = open("CHANGES.txt").read()
@@ -30,7 +30,7 @@ setup(name="libopencore",
       zip_safe=False,
       install_requires=[
         "httplib2",
-        "ElementTree",
+        "elementtree",
         ],
       extras_require={
         "deliverance": [
