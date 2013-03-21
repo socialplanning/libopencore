@@ -74,6 +74,11 @@ def composite_factory(loader, global_conf, **local_conf):
         zine = loader.get_app(zine)
         other_apps.append(('/zine', zine, 'zine'))
 
+    trac = local_conf.get('trac')
+    if trac is not None:
+        trac = loader.get_app(trac)
+        other_apps.append(('/trac', trac, 'trac'))
+
     svenweb = local_conf.get('svenweb')
     if svenweb is not None:
         svenweb = loader.get_app(svenweb)
