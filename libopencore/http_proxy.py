@@ -1,4 +1,5 @@
 from wsgifilter import proxyapp
+from libopencore.http_proxy_cookielib import limit_cookie
 
 vhm_template = "/VirtualHostBase/%(wsgi.url_scheme)s/%(HTTP_HOST)s:%(frontend_port)s"
 
@@ -62,6 +63,7 @@ class RemoteProxy(object):
             robots_uri = robots_uri.rstrip('/') + '/'
         self.robots_uri = robots_uri
         self.rewrite_links = rewrite_links
+        self.rewrite_cookies = rewrite_cookies
 
     robots = ["+http://www.exabot.com/go/robot",
               "+http://search.msn.com/msnbot.htm",
@@ -122,10 +124,9 @@ class RemoteProxy(object):
             force_host=True)
 
         # work around bug in WSGIFilter
-        environ_copy = environ.copy()
-        
         from webob import Request
-        request = Request(environ_copy)
+        request = Request(environ).copy()
+
         resp = request.get_response(app)
 
         if self.rewrite_links:
@@ -136,7 +137,8 @@ class RemoteProxy(object):
                 url_normalize('%s://%s%s' % (
                         request.scheme, 
                         request.host,
-                        request.path_qs))
+                        request.path_qs)),
+                rewrite_cookies=self.rewrite_cookies,
                 )
         
         return resp(environ, start_response)
@@ -146,10 +148,11 @@ import re
 _cookie_domain_re = re.compile(r'(domain="?)([a-z0-9._-]*)("?)', re.I)
 from lxml.html import document_fromstring, tostring
 import urlparse
+from Cookie import Cookie
 
 def rewrite_links(request, response,
                   proxied_base, orig_base,
-                  proxied_url):
+                  proxied_url, rewrite_cookies=False):
 
     exact_proxied_base = proxied_base
     if not proxied_base.endswith('/'):
@@ -213,6 +216,18 @@ def rewrite_links(request, response,
                 else:
                     return match.group(0)
             cook = _cookie_domain_re.sub(rewrite_domain, cook)
+            
+            _cook = Cookie(cook)
+            assert len(_cook.keys()) == 1
+            for key in _cook.keys():
+                _morsel = _cook[key]
+                if _morsel.get('path'):
+                    _morsel['path'] = limit_cookie(
+                        _morsel['path'],
+                        urlparse.urlparse(exact_proxied_base).path,
+                        urlparse.urlparse(exact_orig_base).path)
+                cook = _morsel.OutputString()
+
             response.headers.add('set-cookie', cook)
 
     return response
