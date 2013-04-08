@@ -63,7 +63,6 @@ class RemoteProxy(object):
             robots_uri = robots_uri.rstrip('/') + '/'
         self.robots_uri = robots_uri
         self.rewrite_links = rewrite_links
-        self.rewrite_cookies = rewrite_cookies
 
     robots = ["+http://www.exabot.com/go/robot",
               "+http://search.msn.com/msnbot.htm",
@@ -138,7 +137,6 @@ class RemoteProxy(object):
                         request.scheme, 
                         request.host,
                         request.path_qs)),
-                rewrite_cookies=self.rewrite_cookies,
                 )
         
         return resp(environ, start_response)
@@ -152,7 +150,7 @@ from Cookie import Cookie
 
 def rewrite_links(request, response,
                   proxied_base, orig_base,
-                  proxied_url, rewrite_cookies=False):
+                  proxied_url):
 
     exact_proxied_base = proxied_base
     if not proxied_base.endswith('/'):
