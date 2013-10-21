@@ -1,4 +1,4 @@
-import datetime
+import DateTime
 import time
 
 def parse_listen_settings(ini):
@@ -36,9 +36,8 @@ def parse_listen_settings(ini):
         key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip()
-        if key == "created_on":
-            format = "%Y-%m-%d %H:%M:%S"
-            value = datetime.datetime(*(time.strptime(value, format)[0:6]))
+        if key == "created_on" or key == "modified_on":
+            value = DateTime.DateTime(*(time.strptime(value, format)[0:6]))
         elif key in ("sync_membership", "private_archives"):
             value = (value == "True" and True or False)
         elif key == "title":
