@@ -37,7 +37,7 @@ def parse_listen_settings(ini):
         key = key.strip()
         value = value.strip()
         if key == "created_on" or key == "modified_on":
-            value = DateTime.DateTime(*(time.strptime(value, format)[0:6]))
+            value = DateTime.DateTime(value)
         elif key in ("sync_membership", "private_archives"):
             value = (value == "True" and True or False)
         elif key == "title":
